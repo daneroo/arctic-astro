@@ -1,0 +1,21 @@
+---
+import { getCollection } from 'astro:content';
+
+// Generate static paths for all places
+export async function getStaticPaths() {
+  const places = await getCollection('places');
+  return places.map(place => ({
+    params: { id: place.id.toString() },
+    props: { place },
+  }));
+}
+
+const { place } = Astro.props;
+const { Content } = await place.render();
+---
+
+<article>
+  <h1>{place.data.name}</h1>
+  <p>Location: {place.data.latitude}, {place.data.longitude}</p>
+  <Content />
+</article> 
