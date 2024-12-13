@@ -1,19 +1,27 @@
 ---
 import { getCollection } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
-import Map from '../../components/Map.astro';
+import Layout from '../../../layouts/Layout.astro';
+import Map from '../../../components/Map.astro';
+import type { Place } from '../../../types/place';
+import { useTranslations } from '../../../i18n/utils';
 
-// Generate static paths for all places
 export async function getStaticPaths() {
   const places = await getCollection('places');
-  return places.map(place => ({
-    params: { id: place.id.replace('.md', '') },
-    props: { place, allPlaces: places },
-  }));
+  return ['en', 'fr'].flatMap(lang => 
+    places.map((place: Place) => ({
+      params: { 
+        lang,
+        id: place.id.replace('.md', '')
+      },
+      props: { place, allPlaces: places }
+    }))
+  );
 }
 
-const { place, allPlaces } = Astro.props;
+const { lang } = Astro.params;
+const { place, allPlaces }: { place: Place; allPlaces: Place[] } = Astro.props;
 const { Content } = await place.render();
+const t = useTranslations(lang);
 ---
 
 <Layout title={place.data.name} showPlacesSidebar={true}>
@@ -24,7 +32,7 @@ const { Content } = await place.render();
           {allPlaces.map(p => (
             <li>
               <a 
-                href={`/places/${p.id.replace('.md', '')}`}
+                href={`/${lang}/places/${p.id.replace('.md', '')}`}
                 class={`block p-3 rounded-md transition-colors ${
                   p.id === place.id 
                     ? 'bg-blue-50' 
@@ -44,7 +52,7 @@ const { Content } = await place.render();
     <div class="md:col-span-2">
       <header class="mb-6">
         <h1 class="text-2xl font-bold mb-2">{place.data.name}</h1>
-        <p class="text-gray-600">Location: {place.data.latitude}, {place.data.longitude}</p>
+        <p class="text-gray-600">{t('location')}: {place.data.latitude}, {place.data.longitude}</p>
       </header>
       <div class="h-[400px] mb-8">
         <Map 
@@ -55,6 +63,7 @@ const { Content } = await place.render();
             longitude: p.data.longitude 
           }))}
           selectedId={parseInt(place.id)}
+          lang={lang}
         />
       </div>
       <article>
@@ -62,22 +71,4 @@ const { Content } = await place.render();
       </article>
     </div>
   </div>
-</Layout>
-
-<script>
-  const menuButton = document.getElementById('mobile-menu-button');
-  const sidebar = document.getElementById('places-sidebar');
-
-  menuButton?.addEventListener('click', () => {
-    sidebar?.classList.toggle('-translate-x-full');
-  });
-
-  // Close sidebar when clicking outside
-  document.addEventListener('click', (e) => {
-    if (window.innerWidth < 768 && // Only on mobile
-        !sidebar?.contains(e.target as Node) && 
-        !menuButton?.contains(e.target as Node)) {
-      sidebar?.classList.add('-translate-x-full');
-    }
-  });
-</script> 
+</Layout> 

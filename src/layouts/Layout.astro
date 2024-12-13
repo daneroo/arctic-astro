@@ -1,31 +1,33 @@
 ---
 import { getCollection } from 'astro:content';
 import Search from '../components/Search.astro';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import type { Language } from '../i18n/translations';
 
 interface Props {
-  title?: string;
-  description?: string;
   showPlacesSidebar?: boolean;
 }
 
 const { 
-  title = "Arctic Research Places",
-  description = "A collection of Arctic research locations and projects",
   showPlacesSidebar = false
 } = Astro.props;
 
 const places = await getCollection('places');
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const currentPath = Astro.url.pathname.replace(/^\/(en|fr)/, '') || '/';
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="description" content={description} />
+		<meta name="description" content={t('description')} />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
+		<title>{t('title')}</title>
 	</head>
 	<body>
 		<header class="bg-primary text-white p-4">
@@ -41,19 +43,32 @@ const places = await getCollection('places');
 							<span class="block w-5 h-0.5 bg-white"></span>
 						</button>
 					)}
-					<a href="/">Cambridge Bay Research</a>
+					<a href={`/${lang}/`}>{t('title')}</a>
 				</div>
 				<div class="flex gap-4">
 					<Search 
 						places={places.map(p => ({
-							id: p.id.replace('.md', ''),
+							id: parseInt(p.id.replace('.md', '')),
 							name: p.data.name,
 							description: p.data.description
 						}))}
+						placeholder={t('searchPlaceholder')}
+							lang={lang}
 					/>
-					<button class="px-3 py-1 text-sm bg-white/10 rounded hover:bg-white/20">
-						🌐 FR
-					</button>
+					<div class="flex gap-2">
+						{(['en', 'fr'] as const).map((l: Language) => (
+							<a
+								href={`/${l}${currentPath}`}
+								class={`px-3 py-1 text-sm rounded transition-colors ${
+									l === lang 
+										? 'bg-white/20' 
+										: 'bg-white/10 hover:bg-white/20'
+								}`}
+							>
+								{l.toUpperCase()}
+							</a>
+						))}
+					</div>
 				</div>
 			</nav>
 		</header>

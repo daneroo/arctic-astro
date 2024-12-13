@@ -7,9 +7,10 @@ interface Props {
     longitude: number;
   }[];
   selectedId?: number;
+  lang: string;
 }
 
-const { places, selectedId } = Astro.props;
+const { places, selectedId, lang } = Astro.props;
 ---
 
 <div id="map" class="w-full h-full"></div>
@@ -24,7 +25,7 @@ const { places, selectedId } = Astro.props;
   }
 </style>
 
-<script is:inline define:vars={{ places, selectedId }}>
+<script is:inline define:vars={{ places, selectedId, lang }}>
   window.addEventListener('load', () => {
     // Fix for default marker icon
     const icon = L.icon({
@@ -68,7 +69,7 @@ const { places, selectedId } = Astro.props;
       L.marker([place.latitude, place.longitude], { icon })
         .bindPopup(`
           <div>
-            <a href="/places/${place.id}" class="flex items-center gap-2 no-underline">
+            <a href="/${lang}/places/${place.id}" class="flex items-center gap-2 no-underline">
               <span>${place.name}</span>
               <span style="font-weight: bold; font-size: 1.0em;">↗</span>
             </a>

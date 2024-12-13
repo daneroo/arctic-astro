@@ -5,6 +5,7 @@
 - [x] select layout and style
   - [ ] clone style/ i18n from `arctic-team`
 - [x] implement search
+- [x] i18n
 - [ ] improve Leaflet integration
   - [ ] switch from CDN to npm package
   - [ ] properly handle CSS and assets
