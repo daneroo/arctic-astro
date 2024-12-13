@@ -5,11 +5,13 @@ import Search from '../components/Search.astro';
 interface Props {
   title?: string;
   description?: string;
+  showPlacesSidebar?: boolean;
 }
 
 const { 
   title = "Arctic Research Places",
-  description = "A collection of Arctic research locations and projects"
+  description = "A collection of Arctic research locations and projects",
+  showPlacesSidebar = false
 } = Astro.props;
 
 const places = await getCollection('places');
@@ -27,8 +29,20 @@ const places = await getCollection('places');
 	</head>
 	<body>
 		<header class="bg-primary text-white p-4">
-			<nav class="max-w-7xl mx-auto flex justify-between items-center">
-				<a href="/">Cambridge Bay Research</a>
+			<nav class="max-w-7xl mx-auto flex justify-between items-center relative z-50">
+				<div class="flex items-center gap-4">
+					{showPlacesSidebar && (
+						<button 
+							id="mobile-menu-button"
+							class="p-2 -ml-2 md:hidden hover:bg-white/10 rounded transition-colors"
+						>
+							<span class="block w-5 h-0.5 bg-white mb-1"></span>
+							<span class="block w-5 h-0.5 bg-white mb-1"></span>
+							<span class="block w-5 h-0.5 bg-white"></span>
+						</button>
+					)}
+					<a href="/">Cambridge Bay Research</a>
+				</div>
 				<div class="flex gap-4">
 					<Search 
 						places={places.map(p => ({

@@ -16,28 +16,30 @@ const { place, allPlaces } = Astro.props;
 const { Content } = await place.render();
 ---
 
-<Layout title={place.data.name}>
+<Layout title={place.data.name} showPlacesSidebar={true}>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-    <div class="md:col-span-1">
-      <ul class="space-y-2">
-        {allPlaces.map(p => (
-          <li>
-            <a 
-              href={`/places/${p.id.replace('.md', '')}`}
-              class={`block p-3 rounded-md transition-colors ${
-                p.id === place.id 
-                  ? 'bg-blue-50' 
-                  : 'hover:bg-gray-50'
-              }`}
-            >
-              {p.data.name}
-              <div class="text-sm text-gray-500">
-                {p.data.latitude}, {p.data.longitude}
-              </div>
-            </a>
-          </li>
-        ))}
-      </ul>
+    <div id="places-sidebar" class="fixed inset-0 top-[73px] z-[1000] bg-white transform -translate-x-full transition-transform duration-300 ease-in-out md:static md:transform-none md:col-span-1 md:top-0 md:z-auto">
+      <div class="p-4 overflow-y-auto max-h-[calc(100vh-73px)] md:max-h-none">
+        <ul class="space-y-2">
+          {allPlaces.map(p => (
+            <li>
+              <a 
+                href={`/places/${p.id.replace('.md', '')}`}
+                class={`block p-3 rounded-md transition-colors ${
+                  p.id === place.id 
+                    ? 'bg-blue-50' 
+                    : 'hover:bg-gray-50'
+                }`}
+              >
+                {p.data.name}
+                <div class="text-sm text-gray-500">
+                  {p.data.latitude}, {p.data.longitude}
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
     <div class="md:col-span-2">
       <header class="mb-6">
@@ -60,4 +62,22 @@ const { Content } = await place.render();
       </article>
     </div>
   </div>
-</Layout> 
+</Layout>
+
+<script>
+  const menuButton = document.getElementById('mobile-menu-button');
+  const sidebar = document.getElementById('places-sidebar');
+
+  menuButton?.addEventListener('click', () => {
+    sidebar?.classList.toggle('-translate-x-full');
+  });
+
+  // Close sidebar when clicking outside
+  document.addEventListener('click', (e) => {
+    if (window.innerWidth < 768 && // Only on mobile
+        !sidebar?.contains(e.target as Node) && 
+        !menuButton?.contains(e.target as Node)) {
+      sidebar?.classList.add('-translate-x-full');
+    }
+  });
+</script> 
