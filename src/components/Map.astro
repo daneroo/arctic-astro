@@ -66,7 +66,14 @@ const { places, selectedId } = Astro.props;
     // Add markers
     const markers = places.map(place => 
       L.marker([place.latitude, place.longitude], { icon })
-        .bindPopup(place.name)
+        .bindPopup(`
+          <div>
+            <a href="/places/${place.id}" class="flex items-center gap-2 no-underline">
+              <span>${place.name}</span>
+              <span style="font-weight: bold; font-size: 1.0em;">↗</span>
+            </a>
+          </div>
+        `)
         .addTo(map)
     );
 
