@@ -1,7 +1,11 @@
 ---
-import { defineConfig } from 'astro/config';
-import config from '../astro.config.mjs';
+// import { defineConfig } from 'astro/config';
+// import config from '../astro.config.mjs';
+// import { getRelativeLocaleUrl } from 'astro:i18n';
 
-// Redirect to default language
-return Response.redirect(`/${config.i18n.defaultLocale}`, 307);
+// Fast direct redirect, but hardcoded locale
+// For config-driven redirect, use:
+// return Astro.redirect(getRelativeLocaleUrl('fr' as const));
+
+return Response.redirect('/fr', 307);
 ---
