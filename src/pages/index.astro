@@ -1,11 +1,18 @@
 ---
-// import { defineConfig } from 'astro/config';
-// import config from '../astro.config.mjs';
-// import { getRelativeLocaleUrl } from 'astro:i18n';
-
-// Fast direct redirect, but hardcoded locale
-// For config-driven redirect, use:
-// return Astro.redirect(getRelativeLocaleUrl('fr' as const));
-
-return Response.redirect('/fr', 307);
+// This is a custom redirect page to avoid Astro's built-in 2-second delay
+// when prefixDefaultLocale is true in astro.config.mjs
+//
+// defaultLocale must match astro.config.mjs
+// TODO: find proper way to read from config
+const defaultLocale = "fr";
+const delay = 0;  // Delay in seconds before redirect
 ---
+<!DOCTYPE html>
+<title>Redirecting to: /{defaultLocale}</title>
+<meta http-equiv="refresh" content={`${delay};url=/${defaultLocale}/`} />
+<meta name="robots" content="noindex" />
+<link rel="canonical" href={`/${defaultLocale}/`} />
+<body>
+  <a href={`/${defaultLocale}/`}>Redirecting from <code>/</code> to <code>/{defaultLocale}/</code></a>
+</body>
+  
