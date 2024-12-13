@@ -21,10 +21,10 @@ export async function getStaticPaths() {
 const { lang } = Astro.params;
 const { place, allPlaces }: { place: Place; allPlaces: Place[] } = Astro.props;
 const { Content } = await place.render();
-const t = useTranslations(lang);
+const t = useTranslations(lang as 'en' | 'fr');
 ---
 
-<Layout title={place.data.name} showPlacesSidebar={true}>
+<Layout showPlacesSidebar={true}>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
     <div id="places-sidebar" class="fixed inset-0 top-[73px] z-[1000] bg-white transform -translate-x-full transition-transform duration-300 ease-in-out md:static md:transform-none md:col-span-1 md:top-0 md:z-auto">
       <div class="p-4 overflow-y-auto max-h-[calc(100vh-73px)] md:max-h-none">
