@@ -71,4 +71,22 @@ const t = useTranslations(lang);
       </article>
     </div>
   </div>
-</Layout> 
+</Layout>
+
+<script>
+  const menuButton = document.getElementById('mobile-menu-button');
+  const sidebar = document.getElementById('places-sidebar');
+
+  menuButton?.addEventListener('click', () => {
+    sidebar?.classList.toggle('-translate-x-full');
+  });
+
+  // Close sidebar when clicking outside
+  document.addEventListener('click', (e) => {
+    if (window.innerWidth < 768 && // Only on mobile
+        !sidebar?.contains(e.target as Node) && 
+        !menuButton?.contains(e.target as Node)) {
+      sidebar?.classList.add('-translate-x-full');
+    }
+  });
+</script> 

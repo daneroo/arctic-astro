@@ -23,6 +23,14 @@ const { places, selectedId, lang } = Astro.props;
   :global(.leaflet-control-layers) {
     z-index: 999 !important;
   }
+  :global(.leaflet-control-zoom) {
+    z-index: 999 !important;
+  }
+  /* All other controls */
+  :global(.leaflet-top),
+  :global(.leaflet-bottom) {
+    z-index: 999 !important;
+  }
 </style>
 
 <script is:inline define:vars={{ places, selectedId, lang }}>
