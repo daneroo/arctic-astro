@@ -1,15 +1,40 @@
 ---
 import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Map from '../components/Map.astro';
 
 const places = await getCollection('places');
 ---
 
-<ul>
-  {places.map(place => (
-    <li>
-      <a href={`/places/${place.id}`}>
-        {place.data.name} ({place.data.latitude}, {place.data.longitude})
-      </a>
-    </li>
-  ))}
-</ul>
+<Layout title="Arctic Research Places">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    {/* Left Panel */}
+    <div class="md:col-span-1">
+      <ul class="space-y-2">
+        {places.map(place => (
+          <li>
+            <a 
+              href={`/places/${place.id.replace('.md', '')}`}
+              class="block p-3 hover:bg-gray-50 rounded-md transition-colors"
+            >
+              {place.data.name}
+              <div class="text-sm text-gray-500">
+                {place.data.latitude}, {place.data.longitude}
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    {/* Right Panel - Map */}
+    <div class="md:col-span-2 h-[600px]">
+      <Map places={places.map(p => ({ 
+        id: parseInt(p.id), 
+        name: p.data.name, 
+        latitude: p.data.latitude, 
+        longitude: p.data.longitude 
+      }))} />
+    </div>
+  </div>
+</Layout>

@@ -1,0 +1,94 @@
+---
+// Search component
+interface Props {
+  places: {
+    id: number;
+    name: string;
+    description?: string;
+  }[];
+}
+
+const { places } = Astro.props;
+---
+
+<div>
+  <button
+    data-open-search
+    class="px-3 py-1 text-sm bg-white/10 rounded hover:bg-white/20"
+  >
+    ⌘K Search
+  </button>
+</div>
+
+<dialog id="search-dialog" class="p-4 rounded-lg max-w-lg w-full backdrop:bg-black/50">
+  <form class="space-y-4">
+    <div class="flex justify-between items-center">
+      <input 
+        type="text" 
+        placeholder="Search places..." 
+        class="w-full p-2 border rounded"
+        id="search-input"
+        autocomplete="off"
+      />
+      <button 
+        type="button" 
+        class="ml-2 text-gray-500"
+        data-close-search
+      >
+        ESC
+      </button>
+    </div>
+    <div id="search-results" class="space-y-2">
+      <!-- Results will be inserted here -->
+    </div>
+  </form>
+</dialog>
+
+<script define:vars={{ places }}>
+  console.log('Search places:', places)
+
+  // Open with ⌘K
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault()
+      document.querySelector('#search-dialog')?.showModal()
+      document.querySelector('#search-input')?.focus()
+    }
+  })
+  
+  // Close with ESC (handled by dialog) or button
+  document.querySelector('[data-close-search]')?.addEventListener('click', () => {
+    document.querySelector('#search-dialog')?.close()
+  })
+  
+  // Open with button click
+  document.querySelector('[data-open-search]')?.addEventListener('click', () => {
+    document.querySelector('#search-dialog')?.showModal()
+    document.querySelector('#search-input')?.focus()
+  })
+
+  // Search functionality
+  const searchInput = document.querySelector('#search-input')
+  const searchResults = document.querySelector('#search-results')
+  
+  searchInput?.addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase()
+    const results = places.filter(place => 
+      place.name.toLowerCase().includes(query) || 
+      place.description?.toLowerCase().includes(query)
+    )
+  
+    if (searchResults) {
+      searchResults.innerHTML = results
+        .map(place => `
+          <a 
+            href="/places/${place.id}"
+            class="block p-2 hover:bg-gray-100 rounded"
+          >
+            ${place.name}
+          </a>
+        `)
+        .join('')
+    }
+  })
+</script> 

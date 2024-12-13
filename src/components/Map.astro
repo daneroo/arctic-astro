@@ -1,0 +1,56 @@
+---
+interface Props {
+  places: {
+    id: number;
+    name: string;
+    latitude: number;
+    longitude: number;
+  }[];
+  selectedId?: number;
+}
+
+const { places, selectedId } = Astro.props;
+---
+
+<div id="map" class="w-full h-full"></div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script is:inline define:vars={{ places, selectedId }}>
+  window.addEventListener('load', () => {
+    // Fix for default marker icon
+    const icon = L.icon({
+      iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+      iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+      shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+    });
+
+    // Initialize map
+    const map = L.map('map');
+
+    // Add tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Add markers
+    const markers = places.map(place => 
+      L.marker([place.latitude, place.longitude], { icon })
+        .bindPopup(place.name)
+        .addTo(map)
+    );
+
+    // Set view
+    if (selectedId) {
+      const selected = places.find(p => p.id === selectedId);
+      if (selected) {
+        map.setView([selected.latitude, selected.longitude], 13);
+      }
+    } else if (places.length > 0) {
+      const bounds = L.latLngBounds(places.map(p => [p.latitude, p.longitude]));
+      map.fitBounds(bounds, { padding: [50, 50] });
+    }
+  });
+</script> 

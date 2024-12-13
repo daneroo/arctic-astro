@@ -1,22 +1,56 @@
+---
+import { getCollection } from 'astro:content';
+import Search from '../components/Search.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { 
+  title = "Arctic Research Places",
+  description = "A collection of Arctic research locations and projects"
+} = Astro.props;
+
+const places = await getCollection('places');
+---
+
 <!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
+		<meta name="description" content={description} />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>{title}</title>
 	</head>
 	<body>
-		<slot />
+		<header class="bg-primary text-white p-4">
+			<nav class="max-w-7xl mx-auto flex justify-between items-center">
+				<a href="/">Cambridge Bay Research</a>
+				<div class="flex gap-4">
+					<Search 
+						places={places.map(p => ({
+							id: p.id.replace('.md', ''),
+							name: p.data.name,
+							description: p.data.description
+						}))}
+					/>
+					<button class="px-3 py-1 text-sm bg-white/10 rounded hover:bg-white/20">
+						🌐 FR
+					</button>
+				</div>
+			</nav>
+		</header>
+		<main class="max-w-7xl mx-auto p-8">
+			<slot />
+		</main>
 	</body>
 </html>
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+<style is:global>
+	@tailwind base;
+	@tailwind components;
+	@tailwind utilities;
 </style>

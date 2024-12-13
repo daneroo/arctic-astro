@@ -1,5 +1,11 @@
 # Arctic Astro
 
+## TODO
+
+- [x] select layout and style
+  - [ ] clone style/ i18n from `arctic-team`
+- [x] implement search
+
 ## Prompt
 
 ```text
