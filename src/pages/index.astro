@@ -1,4 +1,6 @@
 ---
+import { useTranslations } from '../i18n/utils';
+
 // This is a custom redirect page to avoid Astro's built-in 2-second delay
 // when prefixDefaultLocale is true in astro.config.mjs
 //
@@ -6,9 +8,10 @@
 // TODO: find proper way to read from config
 const defaultLocale = "fr";
 const delay = 0;  // Delay in seconds before redirect
+const t = useTranslations(defaultLocale);
 ---
 <!DOCTYPE html>
-<title>Redirecting to: /{defaultLocale}</title>
+<title>{t('title')}</title>
 <meta http-equiv="refresh" content={`${delay};url=/${defaultLocale}/`} />
 <meta name="robots" content="noindex" />
 <link rel="canonical" href={`/${defaultLocale}/`} />
