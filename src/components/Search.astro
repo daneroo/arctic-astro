@@ -82,7 +82,7 @@ const { places } = Astro.props;
       searchResults.innerHTML = results
         .map(place => `
           <a 
-            href="/places/${place.id}"
+            href="/places/${place.id.replace('.md', '')}"
             class="block p-2 hover:bg-gray-100 rounded"
           >
             ${place.name}

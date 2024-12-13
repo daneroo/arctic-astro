@@ -23,7 +23,7 @@ const { Content } = await place.render();
         {allPlaces.map(p => (
           <li>
             <a 
-              href={`/places/${p.id}`}
+              href={`/places/${p.id.replace('.md', '')}`}
               class={`block p-3 rounded-md transition-colors ${
                 p.id === place.id 
                   ? 'bg-blue-50' 

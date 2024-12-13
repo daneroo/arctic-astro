@@ -5,6 +5,10 @@
 - [x] select layout and style
   - [ ] clone style/ i18n from `arctic-team`
 - [x] implement search
+- [ ] improve Leaflet integration
+  - [ ] switch from CDN to npm package
+  - [ ] properly handle CSS and assets
+  - [ ] configure Vite/Astro for better module bundling
 
 ## Prompt
 
@@ -125,3 +129,7 @@ All commands are run from the root of the project, from a terminal:
 ## 👀 Want to learn more?
 
 Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+
+```
+
+</rewritten_file>
