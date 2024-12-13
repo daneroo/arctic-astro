@@ -4,10 +4,11 @@ import Layout from '../../../layouts/Layout.astro';
 import Map from '../../../components/Map.astro';
 import type { Place } from '../../../types/place';
 import { useTranslations } from '../../../i18n/utils';
+import type { Language } from '../../../i18n/translations';
 
 export async function getStaticPaths() {
   const places = await getCollection('places');
-  return ['en', 'fr'].flatMap(lang => 
+  return (['en', 'fr'] as const).flatMap((lang) => 
     places.map((place: Place) => ({
       params: { 
         lang,
@@ -18,10 +19,10 @@ export async function getStaticPaths() {
   );
 }
 
-const { lang } = Astro.params;
+const { lang } = Astro.params as { lang: Language };
 const { place, allPlaces }: { place: Place; allPlaces: Place[] } = Astro.props;
 const { Content } = await place.render();
-const t = useTranslations(lang as 'en' | 'fr');
+const t = useTranslations(lang);
 ---
 
 <Layout showPlacesSidebar={true}>

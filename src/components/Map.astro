@@ -1,4 +1,6 @@
 ---
+import type { Language } from '../i18n/translations';
+
 interface Props {
   places: {
     id: number;
@@ -7,7 +9,7 @@ interface Props {
     longitude: number;
   }[];
   selectedId?: number;
-  lang: string;
+  lang: Language;
 }
 
 const { places, selectedId, lang } = Astro.props;

@@ -1,6 +1,7 @@
 ---
 // Search component
 import { useTranslations } from '../i18n/utils';
+import type { Language } from '../i18n/translations';
 
 interface Props {
   places: {
@@ -9,7 +10,7 @@ interface Props {
     description?: string;
   }[];
   placeholder?: string;
-  lang: string;
+  lang: Language;
 }
 
 const { places, placeholder = "⌘K Search", lang } = Astro.props;

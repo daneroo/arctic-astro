@@ -3,12 +3,15 @@ import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Map from '../../components/Map.astro';
 import type { Place } from '../../types/place';
+import type { Language } from '../../i18n/translations';
 
 export function getStaticPaths() {
-  return ['en', 'fr'].map(lang => ({ params: { lang } }));
+  return (['en', 'fr'] as const).map((lang) => ({ 
+    params: { lang } 
+  }));
 }
 
-const { lang } = Astro.params;
+const { lang } = Astro.params as { lang: Language };
 const places = await getCollection('places');
 ---
 
